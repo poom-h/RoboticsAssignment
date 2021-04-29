@@ -11,6 +11,7 @@ import actionlib
 # Import all the necessary ROS message types:
 #from com2009_actions.msg import CameraSweepFeedback, CameraSweepResult, CameraSweepAction
 #from sensor_msgs.msg import CompressedImage
+from com2009_actions.msg import SearchFeedback, SearchResult, SearchAction
 
 from sensor_msgs.msg import LaserScan
 
@@ -19,18 +20,18 @@ from move_tb3 import MoveTB3
 from tb3_odometry import TB3Odometry
 
 # Import some other useful Python Modules
-from sensor_msgs.msg import LaserScan
+import numpy as np
 from math import radians
 import datetime as dt
 import os
 
 class AvoidServer(object):
-    feedback = CameraSweepFeedback() 
-    result = CameraSweepResult()
+    feedback = SearchFeedback() 
+    result = SearchResult()
 
     def __init__(self):
         self.actionserver = actionlib.SimpleActionServer("/obstacle_avoid_action_server", 
-            CameraSweepAction, self.action_server_launcher, auto_start=False)
+            SearchAction, self.action_server_launcher, auto_start=False)
         self.actionserver.start()
 
         #self.base_image_path = '/home/student/myrosdata/week5_images'
@@ -54,6 +55,9 @@ class AvoidServer(object):
     
     def action_server_launcher(self, goal):
         r = rospy.Rate(10)
+
+        self.robot_controller.set_move_cmd(linear=goal.fwd_velocity)
+        self.robot_controller.publish()
 
         """
         success = True

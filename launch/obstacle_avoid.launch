@@ -1,0 +1,4 @@
+<launch>
+    <node name="obstacle_avoid_action_server" pkg="team59" type="avoid_server.py" output="screen">
+    </node>
+</launch>
