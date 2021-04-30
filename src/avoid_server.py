@@ -49,15 +49,54 @@ class AvoidServer(object):
         front_arc = np.array(left_arc[::-1] + right_arc[::-1])
 
         arc_angles = np.arange(-20, 21)
-
+        
         self.min_distance = front_arc.min()
         self.object_angle = arc_angles[np.argmin(front_arc)]
     
     def action_server_launcher(self, goal):
         r = rospy.Rate(10)
 
-        self.robot_controller.set_move_cmd(linear=goal.fwd_velocity)
-        self.robot_controller.publish()
+        #self.robot_controller.set_move_cmd(linear=goal.fwd_velocity)
+
+       # self.robot_controller.set_move_cmd(linear=1, angular=0.1)
+        #self.robot_controller.publish()
+
+        time = 0
+        while True:
+
+            
+
+            if self.min_distance <= 0.6:
+                self.robot_controller.set_move_cmd(linear=0.1, angular=0.5)
+            else:
+                self.robot_controller.set_move_cmd(linear=0.1, angular=0.0)
+            
+
+
+            """
+            if abs(self.object_angle - self.robot_odom.yaw) < 0.1:
+                if self.object - self.robot_odom.yaw < 0:
+                    self.robot_controller.set_move_cmd(linear=0.1, angular=-0.6)
+                else:
+                    self.robot_controller.set_move_cmd(linear=0.1, angular=0.6)
+
+                #self.robot_controller.set_move_cmd(linear=0.1, angular=0.2)
+            else:
+                self.robot_controller.set_move_cmd(linear=0.1, angular=0.0)
+            """
+            self.robot_controller.publish()
+
+            time  = time + 1
+
+        
+
+        
+
+
+
+
+        
+
 
         """
         success = True
